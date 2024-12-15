@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
 
+const BACKEND_URL = 'http://192.168.20.169:5000';  // Replace with your computer's IP address
+
+
 const StoryGenerator = () => {
   const [keywords, setKeywords] = useState('');
   const [story, setStory] = useState('');
 
   const generateStory = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/generate-story', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keywords: keywords.split(' ') }),
-      });
-      const data = await response.json();
-      setStory(data.story);
+      const response = await axios.post(`${BACKEND_URL}/generate-story`, { keywords: keywords.split(',') });
+      setStory(response.data.story); // Get the generated story from the backend response
     } catch (error) {
-      console.error(error);
+      console.error("Error generating story:", error);
       alert('Error generating story');
     }
   };
+
 
   return (
     <View>
